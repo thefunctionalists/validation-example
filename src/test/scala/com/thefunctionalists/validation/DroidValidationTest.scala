@@ -8,6 +8,10 @@ class DroidValidationTest
     with DroidValidation {
 
   "Droid validation" should {
+    "succeed if all fields ok" >> {
+      validate(Droid()).toEither should beRight
+    }
+
     "fail on empty name" >> {
       validate(Droid(name = "")).toEither should beLeft(NonEmptyList(EmptyFieldError("name")))
     }
