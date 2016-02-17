@@ -15,13 +15,16 @@ case class Droid(
 sealed trait DroidError
 case class EmptyFieldError(field: String) extends DroidError
 case object FromDarkSideError extends DroidError
+case object TooYoungError extends DroidError
 
 trait DroidValidation {
   def validate: Droid => ValidationNel[DroidError, Droid] =
     droid =>
-      (notEmpty(droid.name) |@| notFromDarkSide(droid.owner)) {
-        (_, _) => droid
-      }
+      (notEmpty(droid.name)
+        |@| notFromDarkSide(droid.owner)
+        |@| isOldEnough(droid.age)) {
+          (_, _, _) => droid
+        }
 
   private def notEmpty(name: String): ValidationNel[DroidError, String] =
     if (name.isEmpty) EmptyFieldError("name").failureNel
@@ -30,6 +33,10 @@ trait DroidValidation {
   private def notFromDarkSide(owner: String): ValidationNel[DroidError, String] =
     if (owner == "Darth" || owner == "Vader") FromDarkSideError.failureNel
     else owner.successNel
+
+  private def isOldEnough(age: Long): ValidationNel[DroidError, Long] =
+    if (age > 3) age.successNel
+    else TooYoungError.failureNel
 }
 
 trait UcRegisterDroid {

@@ -8,13 +8,16 @@ class DroidValidationTest
     with DroidValidation {
 
   "Droid validation" should {
-
     "fail on empty name" >> {
       validate(Droid(name = "")).toEither should beLeft(NonEmptyList(EmptyFieldError("name")))
     }
 
     "fail if droid from dark side is" >> {
       validate(Droid(owner = "Vader")).toEither should beLeft(NonEmptyList(FromDarkSideError))
+    }
+
+    "fail if droid is too young" >> {
+      validate(Droid(age = 2)).toEither should beLeft(NonEmptyList(TooYoungError))
     }
 
   }
