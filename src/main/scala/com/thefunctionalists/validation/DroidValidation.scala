@@ -14,19 +14,23 @@ case class Droid(
 
 sealed trait DroidError
 case class EmptyFieldError(field: String) extends DroidError
+case object FromDarkSideError extends DroidError
 
 trait DroidValidation {
   def validate: Droid => ValidationNel[DroidError, Droid] =
     droid =>
-      (notEmpty(droid.name) |@| notEmpty(droid.name)) {
+      (notEmpty(droid.name) |@| notFromDarkSide(droid.owner)) {
         (_, _) => droid
       }
 
   private def notEmpty(name: String): ValidationNel[DroidError, String] =
     if (name.isEmpty) EmptyFieldError("name").failureNel
     else name.successNel
-}
 
+  private def notFromDarkSide(owner: String): ValidationNel[DroidError, String] =
+    if (owner == "Darth" || owner == "Vader") FromDarkSideError.failureNel
+    else owner.successNel
+}
 
 trait UcRegisterDroid {
   self: DroidValidation with DroidService =>
