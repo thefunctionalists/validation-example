@@ -43,9 +43,10 @@ trait UcRegisterDroid {
   self: DroidValidation with DroidService =>
 
   //the simplest scenario, for more complex use for comprehension
+  // and maybe change return type to other than validation
   def register = validate(Droid()).map(registerDroid)
 }
 
 trait DroidService {
-  def registerDroid: Droid => Unit = ???
+  def registerDroid: Droid => Droid = ???
 }
