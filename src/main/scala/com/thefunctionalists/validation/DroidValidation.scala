@@ -26,6 +26,7 @@ trait DroidValidation {
           (_, _, _) => droid
         }
 
+  //can be moved as generic validator, but then Error shoud be also generalized
   private def notEmpty(name: String): ValidationNel[DroidError, String] =
     if (name.isEmpty) EmptyFieldError("name").failureNel
     else name.successNel
