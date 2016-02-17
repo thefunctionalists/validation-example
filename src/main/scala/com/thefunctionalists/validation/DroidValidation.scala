@@ -12,15 +12,10 @@ case class Droid(
   height: Long = 109
 )
 
-trait SomeOuterCode {
-  validation: DroidValidation =>
-
-  def registerDroid = validate(Droid())
-
-}
+sealed trait DroidError
+case class EmptyFieldError(field: String) extends DroidError
 
 trait DroidValidation {
-
   def validate: Droid => ValidationNel[DroidError, Droid] =
     droid =>
       (notEmpty(droid.name) |@| notEmpty(droid.name)) {
@@ -30,8 +25,16 @@ trait DroidValidation {
   private def notEmpty(name: String): ValidationNel[DroidError, String] =
     if (name.isEmpty) EmptyFieldError("name").failureNel
     else name.successNel
-
 }
 
-sealed trait DroidError
-case class EmptyFieldError(field: String) extends DroidError
+
+trait UcRegisterDroid {
+  self: DroidValidation with DroidService =>
+
+  //the simplest scenario, for more complex use for comprehension
+  def register = validate(Droid()).map(registerDroid)
+}
+
+trait DroidService {
+  def registerDroid: Droid => Unit = ???
+}
