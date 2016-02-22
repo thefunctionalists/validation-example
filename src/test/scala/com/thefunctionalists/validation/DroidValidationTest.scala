@@ -1,4 +1,4 @@
-package com.thefunctionalists.validation
+package com.thefunctionalists.validation.scalaz
 
 import org.specs2.mutable.Specification
 import scalaz.NonEmptyList
@@ -7,7 +7,7 @@ class DroidValidationTest
     extends Specification
     with DroidValidation {
 
-  "Droid validation" should {
+  "Droid validation witx scalaz" should {
     "succeed if all fields ok" >> {
       validate(Droid()).toEither should beRight
     }

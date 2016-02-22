@@ -1,4 +1,4 @@
-package com.thefunctionalists.validation
+package com.thefunctionalists.validation.scalaz
 
 import scalaz._
 import Scalaz._
