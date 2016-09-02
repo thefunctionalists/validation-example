@@ -6,7 +6,6 @@ import cats.data.Validated
 import cats.data.ValidatedNel
 import cats.data.NonEmptyList
 import cats.syntax.cartesian._
-import cats.std.list._
 
 case class Droid(
   name: String = "R2D2",
@@ -23,8 +22,6 @@ final case object FromDarkSideError extends DroidError
 final case object TooYoungError extends DroidError
 
 trait DroidValidation {
-
-  implicit val nelSemigroup = SemigroupK[NonEmptyList].algebra[DroidError]
 
   def validate: Droid => ValidatedNel[DroidError, Droid] =
     droid => {
@@ -52,8 +49,6 @@ trait DroidValidation {
 trait UcRegisterDroid {
   self: DroidValidation with DroidService =>
 
-  //the simplest scenario, for more complex use for comprehension
-  // and maybe change return type to other than validation
   def register = validate(Droid()).map(registerDroid)
 }
 

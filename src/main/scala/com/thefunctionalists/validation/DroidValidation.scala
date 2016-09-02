@@ -20,31 +20,29 @@ case object TooYoungError extends DroidError
 trait DroidValidation {
   def validate: Droid => ValidationNel[DroidError, Droid] =
     droid =>
-      (notEmpty(droid.name)
-        |@| notFromDarkSide(droid.owner)
-        |@| isOldEnough(droid.age)) {
+      (notEmpty(droid.name).toValidationNel
+        |@| notFromDarkSide(droid.owner).toValidationNel
+        |@| isOldEnough(droid.age).toValidationNel) {
           (_, _, _) => droid
         }
 
   //can be moved as generic validator, but then Error shoud be also generalized
-  private def notEmpty(name: String): ValidationNel[DroidError, String] =
-    if (name.isEmpty) EmptyFieldError("name").failureNel
-    else name.successNel
+  private def notEmpty(name: String): Validation[DroidError, String] =
+    if (name.isEmpty) EmptyFieldError("name").failure
+    else name.success
 
-  private def notFromDarkSide(owner: String): ValidationNel[DroidError, String] =
-    if (owner == "Darth" || owner == "Vader") FromDarkSideError.failureNel
-    else owner.successNel
+  private def notFromDarkSide(owner: String): Validation[DroidError, String] =
+    if (owner == "Darth" || owner == "Vader") FromDarkSideError.failure
+    else owner.success
 
-  private def isOldEnough(age: Long): ValidationNel[DroidError, Long] =
-    if (age > 3) age.successNel
-    else TooYoungError.failureNel
+  private def isOldEnough(age: Long): Validation[DroidError, Long] =
+    if (age > 3) age.success
+    else TooYoungError.failure
 }
 
 trait UcRegisterDroid {
   self: DroidValidation with DroidService =>
 
-  //the simplest scenario, for more complex use for comprehension
-  // and maybe change return type to other than validation
   def register = validate(Droid()).map(registerDroid)
 }
 

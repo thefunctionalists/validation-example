@@ -13,15 +13,15 @@ class DroidValidationTest
     }
 
     "fail on empty name" >> {
-      validate(Droid(name = "")).toEither should beLeft(NonEmptyList(EmptyFieldError("name")))
+      validate(Droid(name = "")).toEither should beLeft(NonEmptyList.of(EmptyFieldError("name")))
     }
 
     "fail if droid from dark side is" >> {
-      validate(Droid(owner = "Vader")).toEither should beLeft(NonEmptyList(FromDarkSideError))
+      validate(Droid(owner = "Vader")).toEither should beLeft(NonEmptyList.of(FromDarkSideError))
     }
 
     "fail if droid is too young" >> {
-      validate(Droid(age = 2)).toEither should beLeft(NonEmptyList(TooYoungError))
+      validate(Droid(age = 2)).toEither should beLeft(NonEmptyList.of(TooYoungError))
     }
 
   }
