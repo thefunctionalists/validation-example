@@ -23,7 +23,7 @@ final case object TooYoungError extends DroidError
 
 trait DroidValidation {
 
-  def validate: Droid => ValidatedNel[DroidError, Droid] =
+  val validate: Droid => ValidatedNel[DroidError, Droid] =
     droid => {
       (notEmpty(droid.name)
         |@| notFromDarkSide(droid.owner)
@@ -32,7 +32,6 @@ trait DroidValidation {
         }
     }
 
-  //can be moved as generic validator, but then Error shoud be also generalized
   private def notEmpty(name: String): ValidatedNel[DroidError, String] =
     if (name.isEmpty) invalidNel(EmptyFieldError("name"))
     else valid(name)

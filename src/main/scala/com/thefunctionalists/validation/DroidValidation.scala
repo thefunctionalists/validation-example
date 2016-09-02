@@ -18,7 +18,7 @@ case object FromDarkSideError extends DroidError
 case object TooYoungError extends DroidError
 
 trait DroidValidation {
-  def validate: Droid => ValidationNel[DroidError, Droid] =
+  val validate: Droid => ValidationNel[DroidError, Droid] =
     droid =>
       (notEmpty(droid.name).toValidationNel
         |@| notFromDarkSide(droid.owner).toValidationNel
@@ -26,7 +26,6 @@ trait DroidValidation {
           (_, _, _) => droid
         }
 
-  //can be moved as generic validator, but then Error shoud be also generalized
   private def notEmpty(name: String): Validation[DroidError, String] =
     if (name.isEmpty) EmptyFieldError("name").failure
     else name.success
