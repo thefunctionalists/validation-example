@@ -57,16 +57,16 @@ trait DroidService {
 
 object Main extends App with UcRegisterDroid with DroidValidation with DroidService {
 
-  val d = Droid(name = "")
+  val d = Droid(name = "some name")
 
-  val foo = (for {
-    v <- validate(Droid(age = 2)).toXor
-    w <- validate(d).toXor
-  } yield w).toValidated
-
-  val baz = validate(Droid()).andThen(x => { println("bazzzz"); validate(d) })
+  val foo = fromEither(for {
+    v <- validate(Droid(age = 2)).toEither
+    w <- validate(d).toEither
+  } yield w)
 
   val bar = validate(d)
+
+  val baz = validate(Droid(name = "")).andThen(x => { println("bazzzz"); validate(d) })
 
   println(s"foo:$foo")
   println(s"bar:$bar")
