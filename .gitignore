@@ -7,12 +7,10 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
-
 .git/
-
 .ensime
 .ensime_cache/
-
 *~
 .#*
 *#
+.idea/
